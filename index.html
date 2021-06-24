@@ -30,7 +30,7 @@
             </ul>
         </div>
         <div class="input-group mb-3">
-            <span class="input-group-text">Simulation time t, сек = </span>
+            <span class="input-group-text">Simulation time t, sec = </span>
             <input id="time" type="text" class="form-control" value="10" aria-label="">
             <span class="input-group-text">Integration step h = </span>
             <input id="step" type="text" class="form-control" value="0.01" aria-label="Server">
@@ -58,7 +58,21 @@
             <canvas id="commonChart"></canvas>
         </div>
         <div class="w-95 m-auto">
-            Зависимость X от Y
+            <div id="specialDiv" class="d-flex justify-content-center align-items-center visually-hidden">
+                Plot
+                <select style="margin-left: 10px; margin-right: 10px;" name="value1" id="value1">
+                    <!-- <option value="X">X</option>
+                    <option value="Y">Y</option>
+                    <option value="Z">Z</option> -->
+                </select>
+                versus
+                <select style="margin-left: 10px; margin-right: 10px;" name="value2" id="value2">
+                    <!-- <option value="X">X</option>
+                    <option value="Y">Y</option>
+                    <option value="Z">Z</option> -->
+                </select>
+                <button class="btn btn-secondary btn-draw" style="margin-left: 10px;">Draw</button>
+            </div>
             <canvas id="specialChart"></canvas>
         </div>
     </div>

@@ -1,7 +1,7 @@
 // Графики
 let commonChart = null;
 let specialChart = null;
-
+let specialChart3 = null;
 //Система уравнений
 let systems = {};
 //Начальные точки
@@ -12,11 +12,12 @@ let points = {};
 let timesLabels = [];
 
 //Буквы для добавления новых строк системы
-const lettersArray = [ 'Z', 'A', 'B', 'C', 'D', 'E', 'F'];
+const lettersArray = ['Z', 'A', 'B', 'C', 'D', 'E', 'F'];
 //Цвета для графиков
 const colorArray = ['orange', 'green', 'brown', 'purple', 'blue', 'pink', 'red'];
 
 createZrow();
+
 
 //Обработка нажатия на кнопку добавления строки системы
 const buttonAdd = document.querySelector('#addBtn');
@@ -83,15 +84,13 @@ slnBtn.addEventListener('click', e => {
 
         const initialValue = Number.parseFloat(iputInit.value);
 
-        if(isNaN(initialValue))
-        {
+        if (isNaN(initialValue)) {
             notifier.show('Error!', `Uncorrect value ${iputInit.value}`, 'danger', '', 4000);
             flagError = 1;
         }
         initialValues[span.innerHTML[0]] = iputInit.value;
     });
-    if(flagError === 1)
-    {
+    if (flagError === 1) {
         return;
     }
     for (let prop in initialValues) {
@@ -99,9 +98,7 @@ slnBtn.addEventListener('click', e => {
     }
     try {
         calculate();
-    }
-    catch (e)
-    {
+    } catch (e) {
         notifier.show('Error!', e.message, 'danger', '', 4000);
     }
 
@@ -161,6 +158,32 @@ function calculate() {
     }
 
     //Отрисовка графиков
+    const divSpecialChart = document.querySelector('#specialDiv'); 
+    divSpecialChart.classList.remove('visually-hidden');
+    const selectValue1 = document.querySelector('#value1');
+    const selectValue2 = document.querySelector('#value2');
+    for (let point in points) {
+        const option = document.createElement('option');
+        option.value = point;
+        option.textContent = point;
+        selectValue1.appendChild(option);
+    }
+
+    for (let point in points) {
+        const option = document.createElement('option');
+        option.value = point;
+        option.textContent = point;
+        selectValue2.appendChild(option);
+    }
+    selectValue1.options[0].selected = true;
+    selectValue2.options[1].selected = true;
+    const drawBtn = document.querySelector('.btn-draw');
+    console.log(drawBtn);
+    drawBtn.addEventListener('click', e => {
+        specialChart.destroy();
+        drawSpecialChart();
+    });
+
     drawCharts();
 
 }
@@ -213,40 +236,43 @@ function drawCharts() {
         config
     );
 
+    const customArray = [];
+    points.X.forEach(p => {
+        customArray.push(Number.parseFloat(p));
+    })
+
     //Отрисовка графика зависимости
-    // const data2 = {
-    //     labels: points.X.sort((a,b) => a - b),
-    //     datasets: [{
-    //         label: 'Y от X',
-    //         backgroundColor: colorArray[0],
-    //         borderColor: colorArray[0],
-    //         data: points.Y,
-    //         borderWidth: 0.1 
-    //     }]
-    // };
-    // const config2 = {
-    //     type: 'line',
-    //     data: data2,
-    //     options: {
-    //         // scales: {
-    //         //     x: {
-    //         //         type: 'linear',
-    //         //         min: 0,
-    //         //         max: Number.parseInt(t),
-    //         //         ticks: {
-    //         //             stepSize: 1
-    //         //         }
-    //         //     }
-    //         // }
-    //     }
-    // };
+    const data2 = {
+        labels: customArray,
+        datasets: [{
+            label: 'X on Y',
+            backgroundColor: 'brown',
+            borderColor: 'brown',
+            data: points.Y,
+            borderWidth: 2
+        }]
+    };
+    const config2 = {
+        type: 'line',
+        data: data2,
+        options: {
+            elements: {
+                point: {
+                    radius: 0
+                }
+            },
+            scales: {
+                x: {
+                    type: 'linear',
+                }
+            }
+        }
+    };
 
-    // specialChart = new Chart(
-    //     document.getElementById('specialChart'),
-    //     config2
-    // );
-
-
+    specialChart = new Chart(
+        document.getElementById('specialChart'),
+        config2
+    );
 }
 
 function createZrow() {
@@ -295,4 +321,41 @@ function createZrow() {
 
     if (lettersArray.length === 0)
         buttonAdd.classList.add('disabled');
+}
+
+function drawSpecialChart() {
+    const val1 = document.querySelector('#value1').value;
+    const val2 = document.querySelector('#value2').value;
+
+    const data2 = {
+        labels: points[val1],
+        datasets: [{
+            label: `${val1} versus ${val2}`,
+            backgroundColor: 'brown',
+            borderColor: 'brown',
+            data: points[val2],
+            borderWidth: 2
+        }]
+    };
+    const config2 = {
+        type: 'line',
+        data: data2,
+        options: {
+            elements: {
+                point: {
+                    radius: 0
+                }
+            },
+            scales: {
+                x: {
+                    type: 'linear',
+                }
+            }
+        }
+    };
+
+    specialChart = new Chart(
+        document.getElementById('specialChart'),
+        config2
+    );
 }

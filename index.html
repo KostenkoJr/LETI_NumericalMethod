@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" href="./css/notifier.css">
     <script src="./chart.min.js"></script>
+    <script src="./colors.js"></script>
 
     <script src="./math.js"></script>
     <title>Document</title>
@@ -36,16 +37,16 @@
             <input id="step" type="text" class="form-control" value="0.01" aria-label="Server">
         </div>
         <div class="input-group mb-3">
-            <span class="input-group-text">X' = </span>
-            <input type="text" class="form-control w-50 equation" value="0.4*X+Z" aria-label="">
-            <span class="input-group-text">X0 = </span>
+            <span class="input-group-text">X<sub>0</sub>' = </span>
+            <input type="text" class="form-control w-50 equation" value="0.4*X0+X2" aria-label="">
+            <span class="input-group-text">X<sub>0</sub>(0) = </span>
             <input type="text" class="form-control" value="0.034" aria-label="Server">
             <span class="input-group-text btn btn-secondary disabled">Remove</span>
         </div>
         <div class="input-group mb-3">
-            <span class="input-group-text">Y' = </span>
-            <input type="text" class="form-control w-50 equation" value="X*Z+(-1)*Y" aria-label="">
-            <span class="input-group-text">Y0 = </span>
+            <span class="input-group-text">X<sub>1</sub>' = </span>
+            <input type="text" class="form-control w-50 equation" value="X0*X2+(-1)*X1" aria-label="">
+            <span class="input-group-text">X<sub>1</sub>(0) = </span>
             <input type="text" class="form-control" value="0" aria-label="Server">
             <span class="input-group-text btn btn-secondary disabled">Remove</span>
         </div>

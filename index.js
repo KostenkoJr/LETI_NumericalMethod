@@ -1,3 +1,5 @@
+//colorArray - массив цветов; берется из файла colors.js
+
 // Графики
 let commonChart = null;
 let specialChart = null;
@@ -11,10 +13,11 @@ let points = {};
 //Отметки времени
 let timesLabels = [];
 
+let countOfRows = 2;
 //Буквы для добавления новых строк системы
 const lettersArray = ['Z', 'A', 'B', 'C', 'D', 'E', 'F'];
 //Цвета для графиков
-const colorArray = ['orange', 'green', 'brown', 'purple', 'blue', 'pink', 'red'];
+
 
 createZrow();
 
@@ -27,8 +30,8 @@ buttonAdd.addEventListener('click', e => {
 
     const span = document.createElement('span');
     span.classList.add('input-group-text');
-    const letter = lettersArray.shift();
-    span.textContent = `${letter}' =`;
+    const index = countOfRows++;
+    span.innerHTML = `X<sub>${index}</sub>' =`;
 
     const input = document.createElement('input');
     input.classList.add('form-control', 'w-50', 'equation');
@@ -36,7 +39,7 @@ buttonAdd.addEventListener('click', e => {
 
     const spanInit = document.createElement('span');
     spanInit.classList.add('input-group-text');
-    spanInit.textContent = `${letter}0 =`;
+    spanInit.innerHTML = `X<sub>${index}</sub>(0) =`;
 
     const inputInit = document.createElement('input');
     inputInit.classList.add('form-control');
@@ -48,9 +51,9 @@ buttonAdd.addEventListener('click', e => {
 
     //Обработка нажатия на кнопку удаления строки системы
     spanRemove.addEventListener('click', e => {
-        lettersArray.unshift(span.textContent[0]);
+        
         spanRemove.parentElement.remove();
-        buttonAdd.classList.remove('disabled');
+
     });
 
     div.appendChild(span);
@@ -62,8 +65,7 @@ buttonAdd.addEventListener('click', e => {
 
     buttonAdd.parentNode.insertBefore(div, buttonAdd);
 
-    if (lettersArray.length === 0)
-        buttonAdd.classList.add('disabled');
+   
 });
 
 //Обработка нажатия на кнопку решение
@@ -80,7 +82,7 @@ slnBtn.addEventListener('click', e => {
         const span = i.nextElementSibling;
         const iputInit = span.nextElementSibling;
 
-        systems[span.innerHTML[0]] = i.value;
+        systems[span.textContent.substring(0, span.textContent.indexOf("("))] = i.value;
 
         const initialValue = Number.parseFloat(iputInit.value);
 
@@ -88,11 +90,12 @@ slnBtn.addEventListener('click', e => {
             notifier.show('Error!', `Uncorrect value ${iputInit.value}`, 'danger', '', 4000);
             flagError = 1;
         }
-        initialValues[span.innerHTML[0]] = iputInit.value;
+        initialValues[span.textContent.substring(0, span.textContent.indexOf("("))] = iputInit.value;
     });
     if (flagError === 1) {
         return;
     }
+
     for (let prop in initialValues) {
         points[prop] = [initialValues[prop]];
     }
@@ -162,6 +165,10 @@ function calculate() {
     divSpecialChart.classList.remove('visually-hidden');
     const selectValue1 = document.querySelector('#value1');
     const selectValue2 = document.querySelector('#value2');
+
+    selectValue1.innerHTML = '';
+    selectValue2.innerHTML = '';
+
     for (let point in points) {
         const option = document.createElement('option');
         option.value = point;
@@ -178,7 +185,7 @@ function calculate() {
     selectValue1.options[0].selected = true;
     selectValue2.options[1].selected = true;
     const drawBtn = document.querySelector('.btn-draw');
-    console.log(drawBtn);
+
     drawBtn.addEventListener('click', e => {
         specialChart.destroy();
         drawSpecialChart();
@@ -237,7 +244,7 @@ function drawCharts() {
     );
 
     const customArray = [];
-    points.X.forEach(p => {
+    points.X0.forEach(p => {
         customArray.push(Number.parseFloat(p));
     })
 
@@ -245,10 +252,10 @@ function drawCharts() {
     const data2 = {
         labels: customArray,
         datasets: [{
-            label: 'X on Y',
+            label: 'X0 on X1',
             backgroundColor: 'brown',
             borderColor: 'brown',
-            data: points.Y,
+            data: points.X1,
             borderWidth: 2
         }]
     };
@@ -282,17 +289,17 @@ function createZrow() {
 
     const span = document.createElement('span');
     span.classList.add('input-group-text');
-    const letter = lettersArray.shift();
-    span.textContent = `${letter}' =`;
+    const index = countOfRows++;
+    span.innerHTML = `X<sub>${index}</sub>' =`;
 
     const input = document.createElement('input');
     input.classList.add('form-control', 'w-50', 'equation');
     input.type = 'text';
-    input.value = '(-1)*X+Y'
+    input.value = '(-1)*X0+X1'
 
     const spanInit = document.createElement('span');
     spanInit.classList.add('input-group-text');
-    spanInit.textContent = `${letter}0 =`;
+    spanInit.innerHTML = `X<sub>${index}</sub>(0) =`;
 
     const inputInit = document.createElement('input');
     inputInit.classList.add('form-control');
@@ -305,9 +312,9 @@ function createZrow() {
 
     //Обработка нажатия на кнопку удаления строки системы
     spanRemove.addEventListener('click', e => {
-        lettersArray.unshift(span.textContent[0]);
+        
         spanRemove.parentElement.remove();
-        buttonAdd.classList.remove('disabled');
+
     });
 
     div.appendChild(span);
@@ -318,9 +325,6 @@ function createZrow() {
 
 
     buttonAdd.parentNode.insertBefore(div, buttonAdd);
-
-    if (lettersArray.length === 0)
-        buttonAdd.classList.add('disabled');
 }
 
 function drawSpecialChart() {
